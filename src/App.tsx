@@ -1,5 +1,6 @@
-import { CounterApp } from "./apps/Counter";
+import { TemperatureApp } from "./apps/Temperature";
 
 export const App = () => {
-  return <CounterApp />;
+  // return <CounterApp />;
+  return <TemperatureApp />;
 };

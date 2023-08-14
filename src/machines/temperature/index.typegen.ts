@@ -12,10 +12,13 @@ export interface Typegen0 {
     guards: never;
     services: never;
   };
-  eventsCausingActions: {};
+  eventsCausingActions: {
+    changeC: "CHANGE_C";
+    changeF: "CHANGE_F";
+  };
   eventsCausingDelays: {};
   eventsCausingGuards: {};
   eventsCausingServices: {};
-  matchesStates: undefined;
+  matchesStates: "active";
   tags: never;
 }
