@@ -6,6 +6,8 @@ import { PokemonList } from "../components/pokemon/List";
 import { Pagination } from "../components/pokemon/Pagination";
 import { PokemonEntity, ShortPokemonEntity } from "../types/pokemon";
 
+import "./Pokemon.css";
+
 export const PokemonApp = () => {
   const error = false;
   const pageCount = 5;
