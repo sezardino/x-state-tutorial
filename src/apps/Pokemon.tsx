@@ -1,38 +1,46 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState } from "react";
+
+import { useMachine } from "@xstate/react";
 import { PokemonCard } from "../components/pokemon/Card";
 import { PokemonImage } from "../components/pokemon/Image";
 import { PokemonList } from "../components/pokemon/List";
 import { Pagination } from "../components/pokemon/Pagination";
-import { PokemonEntity, ShortPokemonEntity } from "../types/pokemon";
-
+import { pokemonMachine } from "../machines/pokemon";
 import "./Pokemon.css";
 
 export const PokemonApp = () => {
-  const error = false;
-  const pageCount = 5;
-  const [currentPage, setCurrentPage] = useState(0);
-  const pokemonList: ShortPokemonEntity[] = [];
-  const [selectedPokemon, setSelectedPokemon] = useState<PokemonEntity | null>(
-    null
-  );
-  const [selectedPokemonId, setSelectedPokemonId] = useState<number | null>(
-    null
-  );
+  const [
+    {
+      value,
+      context: { error, pageCount, selectedPokemon, data },
+    },
+    send,
+  ] = useMachine(pokemonMachine, {
+    services: {
+      fetchSelectedPokemon: (context) =>
+        fetch(`/pokemon/${context.selectedPokemonId}.json`).then((res) =>
+          res.json()
+        ),
+      fetchCurrentPage: (context) =>
+        fetch(`/pages/${context.currentPage}.json`).then((res) => res.json()),
+    },
+  });
 
   return (
     <div className="app">
-      {error && <div>We encountered an error. Please try again later.</div>}
+      {error && <div>{error}</div>}
       {!error && (
         <div className="container">
           <div>
             <PokemonList
-              list={pokemonList}
-              onPokemonClick={(id) => setSelectedPokemonId(id)}
+              list={data}
+              onPokemonClick={(pokemonId) =>
+                send({ type: "Select Pokemon", pokemonId })
+              }
             />
             <Pagination
               pageCount={pageCount}
-              onPageClick={(page) => setCurrentPage(page)}
+              onPageClick={(page) => send({ type: "Select Page", page })}
             />
           </div>
           {selectedPokemon && (
